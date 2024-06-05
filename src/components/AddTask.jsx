@@ -51,6 +51,14 @@
             setTodoList(updatedTodoList);
             localStorage.setItem(key, JSON.stringify(updatedTodoList));
         }
+
+        const handleSave = (taskName, newTaskName) => {
+            const updatedTodoList = todoList.map(item =>
+                item.name === taskName ? { ...item, name: newTaskName, editting: false } : item
+            );
+            setTodoList(updatedTodoList);
+            localStorage.setItem(key, JSON.stringify(updatedTodoList));
+        }
         
         return (
             <div className='flex flex-col'>
@@ -74,6 +82,8 @@
                                     <input 
                                         type="text" 
                                         placeholder={todoItem.name}
+                                        value={task}
+                                        onChange={(e) => setTask(e.target.value)}
                                     />
                                 ) : (
                                     <button 
@@ -87,11 +97,7 @@
                                 )}
                                 <div className='flex gap-2'>
                                     { todoItem.editting ? (
-                                        <Button 
-                                            text='Save' 
-                                            onClick={() => handleEdit(todoItem.name)} 
-                                            
-                                        />
+                                        <Button text='Save' onClick={() => handleSave(todoItem.name, task)} />  
                                     ) : (
                                         <Button text='Edit' onClick={() => handleEdit(todoItem.name)} />
                                     )}
