@@ -12,7 +12,7 @@ function Task(props) {
     props.onDone(props.taskName);
   }
 
-  const handleEdit = () {
+  const handleEdit = () => {
     props.onEdit(props.taskName);
   }
 
