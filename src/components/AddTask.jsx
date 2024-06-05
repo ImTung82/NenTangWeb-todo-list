@@ -6,6 +6,7 @@ function AddTask() {
     const [task, setTask] = useState('');
     // Tương ứng với list các Task
     const [todoList, setTodoList] = useState([]);
+    const [editting, seEditting] = useState(false);
     // Key ở trên localStorage
     const key = 'todo';
 
@@ -43,6 +44,10 @@ function AddTask() {
         localStorage.setItem(key, JSON.stringify(updatedTodoList));
     };
 
+    const handleEdit = (taskName) => {
+        
+    }
+
     return (
         <div className='flex flex-col'>
             <form onSubmit={handleSubmit}>
@@ -70,7 +75,7 @@ function AddTask() {
                                 {todoItem.name}
                             </button>
                             <div className='flex gap-2'>
-                                <Button text='Edit' />
+                                <Button text='Edit' onClick={() => handleEdit(todoItem.name)} />
                                 {/* Button này có sự kiện onClick -> gọi hàm handleDelete với tham số truyền vào là todoItem.name - tên của Task tương ứng với nút Delete vừa bấm */}
                                 <Button text='Delete' onClick={() => handleDelete(todoItem.name)} />
                             </div>

@@ -12,12 +12,16 @@ function Task(props) {
     props.onDone(props.taskName);
   }
 
+  const handleEdit = () {
+    props.onEdit(props.taskName);
+  }
+
   return (
      <div className='flex items-center justify-between'>
         <button className='font-bold' onClick={handleMarkAsDone}>{props.taskName}</button>
         {/* <p className='font-bold'>{props.taskName}</p> */}
         <div className='flex gap-2'>
-            <Button text='Edit' />
+            <Button text='Edit' onClick={handleEdit} />
             {/* Bao gồm sự kiện onClick tương ứng với props.onClick ở Button.jsx */}
             {/* Sự kiện gọi tới hàm handleDeleteClick */}
             <Button text='Delete' onClick={handleDeleteClick} />
