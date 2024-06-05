@@ -4,16 +4,24 @@ import Button from './Button'
 function Task(props) {
   const handleDeleteClick = () => {
     // Gọi callback function để xử lý việc xóa task
-    if (props.onDelete) {
-      props.onDelete(props.taskName);
-    }
+    props.onDelete(props.taskName);
   };
 
+  const handleMarkAsDone = () => {
+    // Gọi callback function để xử lý việc sửa trạng thái hoàn thành task
+    props.onDone(props.taskName);
+  }
+
   return (
-    <div className='flex gap-2 justify-center items-center py-2'>
-        <p>{props.taskName}</p>
-        <Button text='Edit' />
-        <Button text='Delete' onClick={handleDeleteClick} />
+     <div className='flex items-center justify-between'>
+        <button className='font-bold' onClick={handleMarkAsDone}>{props.taskName}</button>
+        {/* <p className='font-bold'>{props.taskName}</p> */}
+        <div className='flex gap-2'>
+            <Button text='Edit' />
+            {/* Bao gồm sự kiện onClick tương ứng với props.onClick ở Button.jsx */}
+            {/* Sự kiện gọi tới hàm handleDeleteClick */}
+            <Button text='Delete' onClick={handleDeleteClick} />
+      </div>
     </div>
   )
 }
