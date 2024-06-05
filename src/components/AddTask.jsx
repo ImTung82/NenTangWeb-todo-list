@@ -6,7 +6,7 @@ function AddTask() {
     const [task, setTask] = useState('');
     // Tương ứng với list các Task
     const [todoList, setTodoList] = useState([]);
-    const [editting, seEditting] = useState(false);
+    const [editting, setEditting] = useState(false);
     // Key ở trên localStorage
     const key = 'todo';
 
