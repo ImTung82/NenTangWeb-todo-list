@@ -6,7 +6,10 @@
         const [task, setTask] = useState('');
         // Tương ứng với list các Task
         const [todoList, setTodoList] = useState([]);
-        const [editting, setEditting] = useState(false);
+        // Lưu dữ liệu Task cũ
+        const [editingTask, setEditingTask] = useState(null);
+        // Lưu dữ liệu Task mới vừa nhập vào
+        const [editingValue, setEditingValue] = useState('');
         // Key ở trên localStorage
         const key = 'todo';
 
@@ -21,7 +24,7 @@
             // Nếu đầu và cuối của task là trống (kiểm tra bằng cách sử dụng task.trim()) thì sẽ không thêm task mới
             if (task.trim() === '') return;
             // Tạo ra một Task mới, bao gồm 2 trường: name - tên của Task và done - trạng thái hoàn thành của Task (mặc định là false)
-            const updatedTodoList = [...todoList, { name: task, done: false, editting: false }];
+            const updatedTodoList = [...todoList, { name: task, done: false }];
             setTodoList(updatedTodoList);
             localStorage.setItem(key, JSON.stringify(updatedTodoList));
             setTask('');
@@ -45,19 +48,19 @@
         };
 
         const handleEdit = (taskName) => {
-            const updatedTodoList = todoList.map(item => 
-                item.name === taskName ? { ...item, editting: !item.editting } : item
-            );
-            setTodoList(updatedTodoList);
-            localStorage.setItem(key, JSON.stringify(updatedTodoList));
+            setEditingTask(taskName);
+            const taskToEdit = todoList.find(item => item.name === taskName);
+            setEditingValue(taskToEdit.name);
         }
-
-        const handleSave = (taskName, newTaskName) => {
+    
+        const handleSave = (taskName) => {
             const updatedTodoList = todoList.map(item =>
-                item.name === taskName ? { ...item, name: newTaskName, editting: false } : item
+                item.name === taskName ? { ...item, name: editingValue } : item
             );
             setTodoList(updatedTodoList);
             localStorage.setItem(key, JSON.stringify(updatedTodoList));
+            setEditingTask(null);
+            setEditingValue('');
         }
         
         return (
@@ -78,26 +81,26 @@
                     <ul>
                         {todoList.map((todoItem) => (
                             <li key={todoItem.name} className='flex items-center justify-between'>
-                                { todoItem.editting ? (
-                                    <input 
-                                        type="text" 
+                                 {editingTask === todoItem.name ? (
+                                    <input
+                                        type="text"
                                         placeholder={todoItem.name}
-                                        value={task}
-                                        onChange={(e) => setTask(e.target.value)}
+                                        value={editingValue}
+                                        onChange={(e) => setEditingValue(e.target.value)}
                                     />
                                 ) : (
                                     <button 
                                         // ${...} là cách sử dụng template literals trong JavaScript
                                         // Nếu todoItem.done (kiểm tra done từ localStorage) = true, thêm thuộc tính CSS line-through và ngược lại
-                                        className={`font-bold ${todoItem.done ? 'line-through' : ''}`} 
+                                        className={`font-bold ${todoItem.done ? 'line-through text-red-500' : ''}`} 
                                         onClick={() => handleMarkAsDone(todoItem.name)}
                                     >
                                         {todoItem.name}
                                     </button>
                                 )}
                                 <div className='flex gap-2'>
-                                    { todoItem.editting ? (
-                                        <Button text='Save' onClick={() => handleSave(todoItem.name, task)} />  
+                                    { editingTask === todoItem.name ? (
+                                        <Button text='Save' onClick={() => handleSave(todoItem.name)} />
                                     ) : (
                                         <Button text='Edit' onClick={() => handleEdit(todoItem.name)} />
                                     )}
