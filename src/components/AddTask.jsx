@@ -49,17 +49,23 @@
 
         const handleEdit = (taskName) => {
             setEditingTask(taskName);
+            // Tìm kiếm tên Task cần edit
             const taskToEdit = todoList.find(item => item.name === taskName);
+            // Lưu tên Task cần edit vào useState [editingTask, setEditingTask]
             setEditingValue(taskToEdit.name);
         }
     
         const handleSave = (taskName) => {
             const updatedTodoList = todoList.map(item =>
+                // editingValue: Nội dung Task mới
+                // Nếu item đang kiểm tra trùng với Task muốn sửa
+                // Set tên của Task cũ thành editingValue
                 item.name === taskName ? { ...item, name: editingValue } : item
             );
             setTodoList(updatedTodoList);
             localStorage.setItem(key, JSON.stringify(updatedTodoList));
             setEditingTask(null);
+            // Sau khi sửa xong, set dữ liệu cần sửa [editingTask, setEditingTask] thành rỗng
             setEditingValue('');
         }
         
@@ -84,7 +90,9 @@
                                  {editingTask === todoItem.name ? (
                                     <input
                                         type="text"
+                                        // Placeholder tên Task cũ để người dùng dễ theo dõi
                                         placeholder={todoItem.name}
+                                        // Đưa dữ liệu của input thành nội dung Task mới
                                         value={editingValue}
                                         onChange={(e) => setEditingValue(e.target.value)}
                                     />
@@ -100,8 +108,11 @@
                                 )}
                                 <div className='flex gap-2'>
                                     { editingTask === todoItem.name ? (
+                                        // Nếu tên của Task muốn sửa giống editingTask
+                                        // Chuyển button thành Save
                                         <Button text='Save' onClick={() => handleSave(todoItem.name)} />
                                     ) : (
+                                        // Nếu không thì chuyển button thành Edit như cũ
                                         <Button text='Edit' onClick={() => handleEdit(todoItem.name)} />
                                     )}
                                     {/* Button này có sự kiện onClick -> gọi hàm handleDelete với tham số truyền vào là todoItem.name - tên của Task tương ứng với nút Delete vừa bấm */}
