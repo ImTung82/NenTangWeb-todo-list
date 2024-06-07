@@ -1,33 +1,48 @@
-import React from 'react'
-import Button from './Button'
+import React, { useState, useEffect } from 'react';
+import Button from './Button';
 
-function Task(props) {
-  const handleDeleteClick = () => {
-    // Gọi callback function để xử lý việc xóa task
-    props.onDelete(props.taskName);
-  };
+const Task = ({ todoItem, handleMarkAsDone, handleSave, handleDelete, isEditing, setEditingTask }) => {
+    const [editingValue, setEditingValue] = useState(todoItem.name);
 
-  const handleMarkAsDone = () => {
-    // Gọi callback function để xử lý việc sửa trạng thái hoàn thành task
-    props.onDone(props.taskName);
-  }
+    useEffect(() => {
+        if (isEditing) {
+            setEditingValue(todoItem.name);
+        }
+    }, [isEditing, todoItem.name]);
 
-  const handleEdit = () => {
-    props.onEdit(props.taskName);
-  }
+    const handleSaveClick = () => {
+        handleSave(todoItem.name, editingValue);
+        setEditingTask(null);
+    };
 
-  return (
-     <div className='flex items-center justify-between'>
-        <button className='font-bold' onClick={handleMarkAsDone}>{props.taskName}</button>
-        {/* <p className='font-bold'>{props.taskName}</p> */}
-        <div className='flex gap-2'>
-            <Button text='Edit' onClick={handleEdit} />
-            {/* Bao gồm sự kiện onClick tương ứng với props.onClick ở Button.jsx */}
-            {/* Sự kiện gọi tới hàm handleDeleteClick */}
-            <Button text='Delete' onClick={handleDeleteClick} />
-      </div>
-    </div>
-  )
-}
+    return (
+        <div className='flex justify-between items-center w-full'>
+            {isEditing ? (
+                <input
+                    type="text"
+                    placeholder={todoItem.name}
+                    value={editingValue}
+                    onChange={(e) => setEditingValue(e.target.value)}
+                    className="rounded border p-2"
+                />
+            ) : (
+                <button
+                    className={`font-bold ${todoItem.done ? 'line-through text-red-500' : ''}`}
+                    onClick={() => handleMarkAsDone(todoItem.name)}
+                >
+                    {todoItem.name}
+                </button>
+            )}
+            <div className="flex gap-2">
+                { isEditing ? (
+                    <Button text='Save' onClick={handleSaveClick} />
+                ) : (
+                    <Button text='Edit' onClick={() => setEditingTask(todoItem.name)} />
+                )}
+                <Button text='Delete' onClick={() => handleDelete(todoItem.name)} />
+            </div>
+        </div>
+    );
+};
 
 export default Task;
